@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Little Duck World 🐣</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Floating background elements container -->
+    <div id="floating-bg"></div>
+    
+    <!-- Sparkle effect container -->
+    <div id="sparkle-container"></div>
+    
+    <!-- Main Mascot container -->
+    <div id="mascot-container">
+        <div id="mascot-bubble" class="hidden">Quack!</div>
+        <div class="mascot-duck">🦆</div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="app-container">
+
+        <!-- 1. HOME PAGE -->
+        <section id="page-home" class="page active">
+            <h1 class="title">Our Little Duck World 🐣</h1>
+            <p class="subtitle">Welcome, <span id="user-name">Baby</span>! 💕</p>
+            <div class="counter-box">
+                <p id="time-counter">0 Years, 0 Months, 0 Days<br><span style="font-size:1rem; color:#8a7a7a;">0h 0m 0s</span></p>
+                <div style="margin-top:0.5rem; font-weight:600;">with you ❤️</div>
+            </div>
+            
+            <div class="menu-buttons">
+                <button class="btn btn-primary" onclick="navigate('page-daily')">💌 Daily Love Message</button>
+                <button class="btn btn-secondary" onclick="navigate('page-mood')">🧠 Mood Generator</button>
+                <button class="btn btn-learn" onclick="navigate('page-learn')">📚 Learn with KoKo</button>
+                <button class="btn btn-accent" onclick="navigate('page-game')">🦆 Play with me, not me</button>
+                <button class="btn btn-joke" onclick="navigate('page-joke')">😂 Make Me Laugh</button>
+                <button class="btn btn-primary" onclick="navigate('page-tuner')" style="background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);">🎵 Tune For Me</button>
+            </div>
+
+            <button class="btn btn-outline miss-you-btn" onclick="showMissYou()">I miss you ❤️</button>
+            <p id="miss-you-text" class="hidden"></p>
+        </section>
+
+        <!-- 2. DAILY LOVE MESSAGE PAGE -->
+        <section id="page-daily" class="page hidden">
+            <button class="btn btn-back" onclick="navigate('page-home')">← Back Home</button>
+            <h2 class="page-title">Daily Love Message 💌</h2>
+            <div id="daily-message-container" class="glass-card">
+                <h3 id="daily-day-display">Day X with you ❤️</h3>
+                <div id="daily-text-box" class="message-box">
+                    <p id="daily-message-text" class="typing-text">Locked message text...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. MOOD GENERATOR PAGE -->
+        <section id="page-mood" class="page hidden">
+            <button class="btn btn-back" onclick="navigate('page-home')">← Back Home</button>
+            <h2 class="page-title">Mood Generator 🧠</h2>
+            <p class="subtitle">How are you feeling baby?</p>
+            
+            <div class="mood-grid">
+                <button class="mood-btn" onclick="selectMood('sad')"><span class="mood-icon">🥺</span><br>Sad</button>
+                <button class="mood-btn" onclick="selectMood('angry')"><span class="mood-icon">😡</span><br>Angry</button>
+                <button class="mood-btn" onclick="selectMood('sleepy')"><span class="mood-icon">😴</span><br>Sleepy</button>
+                <button class="mood-btn" onclick="selectMood('happy')"><span class="mood-icon">🥰</span><br>Happy</button>
+                <button class="mood-btn" onclick="selectMood('stressed')"><span class="mood-icon">😵</span><br>Stressed</button>
+                <button class="mood-btn" onclick="selectMood('hungry')"><span class="mood-icon">🤤</span><br>Hungry</button>
+            </div>
+
+            <div id="mood-result" class="glass-card hidden">
+                <div id="mood-emoji" class="large-emoji"></div>
+                <p id="mood-message" class="message-text"></p>
+            </div>
+            <div id="mood-cooldown-msg" class="glass-card hidden">
+                <p class="cooldown-text">Come back later baby 😤❤️</p>
+            </div>
+        </section>
+
+        <!-- 4. DUCK GAME PAGE -->
+        <section id="page-game" class="page hidden">
+            <button class="btn btn-back" onclick="navigate('page-home'); if(typeof stopRunner === 'function') stopRunner();">← Back Home</button>
+            <h2 class="page-title">Quack playground 🦆</h2>
+            
+            <div style="display:flex; justify-content:center; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                <button class="btn btn-outline active-tab" id="game-feed-btn" onclick="showGameTab('feed')" style="margin-top:0; flex:1; max-width: 150px;">🍞 Feed Me</button>
+                <button class="btn btn-outline" id="game-run-btn" onclick="showGameTab('run')" style="margin-top:0; flex:1; max-width: 150px;">🏃 Quack Run</button>
+            </div>
+            
+            <div id="game-feed-view" class="game-container glass-card">
+                <div class="score-board">
+                    Score: <span id="game-score">0</span>
+                </div>
+                
+                <div class="game-area" id="game-area">
+                    <div id="game-duck" class="game-duck">🦆</div>
+                    <div id="food-container">
+                        <!-- Food items will be spawned here -->
+                    </div>
+                </div>
+                
+                <div id="game-message" class="hidden message-box"></div>
+                <p class="instruction" style="margin-top: 1rem;">Drag the food to the duck or tap it!</p>
+            </div>
+            
+            <div id="game-run-view" class="glass-card hidden">
+                <div class="score-board" style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-family: 'Poppins', sans-serif;">
+                    <span style="font-size: 1rem; color: #8a7a7a;">High Score: <span id="run-hi-score">0</span></span>
+                    <span style="font-size: 1.2rem; font-weight: bold; color: var(--color-primary-dark);">Distance: <span id="run-score">0</span>m</span>
+                </div>
+                
+                <div id="run-game-area" class="run-area day-mode">
+                    <div id="run-bg-elements"></div>
+                    <div id="run-ground"></div>
+                    
+                    <!-- Character -->
+                    <div id="run-char" class="run-char">
+                        <div class="run-char-body" id="run-char-body">🦆</div>
+                    </div>
+                    
+                    <!-- Obstacles -->
+                    <div id="run-obstacles-container"></div>
+                    
+                    <!-- Overlays -->
+                    <div id="run-start-overlay" class="run-overlay">
+                        Tap or Press Space to Jump!<br>
+                        <span style="font-size: 0.9rem; margin-top: 0.5rem; display: block; opacity: 0.8;">Stay alive baby! 💕</span>
+                    </div>
+                    <div id="run-game-over" class="run-overlay hidden">
+                        <h3 style="color:#a32a3d; margin-bottom: 0.5rem; font-size: 1.5rem; font-family: 'Pacifico', cursive;">Oh no baby! 🥺</h3>
+                        <p id="run-final-score" style="margin-bottom: 1rem; font-weight: bold;"></p>
+                        <button class="btn btn-primary" onclick="initRunnerGame(); startRunner();" style="margin: 0 auto;">Try Again ❤️</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. JOKE PAGE -->
+        <section id="page-joke" class="page hidden">
+            <button class="btn btn-back" onclick="navigate('page-home')">← Back Home</button>
+            <h2 class="page-title">😂 Make NEO Baby Laugh</h2>
+            
+            <div id="joke-container" class="glass-card">
+                <button class="btn btn-joke" id="btn-tell-joke" onclick="tellJoke()" style="font-size: 1.2rem; margin-bottom: 0;">Tell me something funny 😤</button>
+                
+                <div id="joke-display" class="message-box hidden" style="margin-top: 1.5rem; flex-direction: column;">
+                    <p id="joke-text" class="typing-text" style="color: #ff6b81; font-weight: 600; font-size: 1.2rem; line-height: 1.5;"></p>
+                    <div id="joke-reaction" class="hidden" style="font-size: 3rem; margin-top: 1rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">🦆😂</div>
+                </div>
+                
+                <div id="joke-cooldown-msg" class="glass-card hidden" style="margin-top: 1.5rem; padding: 1rem;">
+                    <p class="cooldown-text">Wait baby 😤 Come back in 1 hour ❤️</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. LEARN PAGE -->
+        <section id="page-learn" class="page hidden">
+            <button class="btn btn-back" onclick="navigate('page-home')">← Back Home</button>
+            <h2 class="page-title">📚 Learn with KoKo</h2>
+            
+            <div id="learn-home" class="glass-card">
+                <p class="subtitle" style="margin-bottom: 1rem;">Let's learn together! Select a language journey:</p>
+                <div style="display:flex; justify-content:center; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="loadLanguageMap('Japanese')" style="flex:1;">🇯🇵 Japanese</button>
+                    <button class="btn btn-secondary" onclick="loadLanguageMap('Chinese')" style="flex:1;">🇨🇳 Chinese</button>
+                </div>
+                <button class="btn btn-outline" onclick="showLearnHistory()" style="margin-top: 1.5rem; width: 100%;">📊 Learning History</button>
+            </div>
+
+            <!-- MAP PAGE -->
+            <div id="learn-map" class="glass-card hidden" style="padding: 1rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                    <button class="btn-back" onclick="showLearnHome()" style="margin-bottom:0; padding: 0.3rem 1rem;">← Back</button>
+                    <h3 id="map-lang-title" style="color:var(--color-primary-dark);"></h3>
+                </div>
+                <div style="text-align:left; font-weight:600; color:#8a7a7a; margin-bottom:1rem;" id="map-progress-text">Progress: 0/365</div>
+                
+                <div id="map-scroll-area" style="max-height: 400px; overflow-y: auto; overflow-x: hidden; padding: 2rem 0; border: 2px solid rgba(255,182,193,0.3); border-radius: 15px; position:relative;" class="custom-scroll">
+                    <!-- Map nodes injected here -->
+                </div>
+            </div>
+
+            <!-- QUIZ VIEW -->
+            <div id="learn-quiz" class="glass-card hidden">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; color: #8a7a7a; font-weight: 600;">
+                    <span id="learn-lang-label"></span>
+                    <span id="learn-progress"></span>
+                </div>
+                
+                <!-- Progress bar -->
+                <div style="width:100%; background: #ffe4e1; height: 10px; border-radius: 5px; margin-bottom: 1.5rem; overflow:hidden;">
+                    <div id="quiz-bar-fill" style="height:100%; width:0%; background: #ffb6c1; transition: width 0.3s ease;"></div>
+                </div>
+                
+                <h3 id="learn-question" style="font-size: 1.5rem; color: var(--color-text); margin-bottom: 1.5rem;"></h3>
+                
+                <div id="learn-options" style="display: flex; flex-direction: column; gap: 0.8rem;"></div>
+                
+                <div id="learn-feedback" class="hidden message-box" style="margin-top: 1.5rem; min-height: 80px; flex-direction: column; gap: 0.5rem; justify-content: center;">
+                    <p id="learn-feedback-text" style="font-size: 1.1rem; font-weight: 600;"></p>
+                    <button class="btn btn-outline" id="learn-next-btn" onclick="nextLearnQuestion()" style="margin-top: 0.5rem; padding: 0.5rem;">Next →</button>
+                </div>
+            </div>
+
+            <!-- RESULT VIEW -->
+            <div id="learn-result" class="glass-card hidden">
+                <h3 id="learn-result-header" style="font-size: 2rem; margin-bottom: 1rem; color: #ff6b81;"></h3>
+                <p style="font-size: 1.2rem; margin-bottom: 1rem;">Score: <span id="learn-score">0</span>/<span id="learn-total">0</span></p>
+                <p id="learn-result-msg" style="color: #5a4f4f; font-weight: 600; font-size: 1.1rem; margin-bottom: 2rem;"></p>
+                <div style="display:flex; justify-content:center; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="showLearnMap()">Back to Map</button>
+                </div>
+            </div>
+
+            <!-- HISTORY PAGE -->
+            <div id="learn-history" class="glass-card hidden" style="padding:1rem;">
+                <div style="display:flex; justify-content:flex-start; margin-bottom:1rem;">
+                    <button class="btn-back" onclick="showLearnHome()" style="margin-bottom:0; padding: 0.3rem 1rem;">← Back</button>
+                </div>
+                <h3 style="color:#ff6b81; margin-bottom:1rem;">📊 Learning History</h3>
+                <div id="history-list" style="max-height:350px; overflow-y:auto; text-align:left;" class="custom-scroll">
+                    <!-- History items -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. TUNER PAGE -->
+        <section id="page-tuner" class="page hidden">
+            <button class="btn btn-back" onclick="navigate('page-home'); stopAutoPlay(); stopMic();">← Back Home</button>
+            <h2 class="page-title">🎵 Tune For Me</h2>
+            
+            <div class="glass-card" style="text-align: center; margin-bottom: 2rem;">
+                <div style="display:flex; justify-content:center; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                    <button class="btn btn-outline active-tab" id="tuner-practical_guitar-btn" onclick="renderInstrumentNotes('practical_guitar')" style="margin-top:0; flex:1; min-width: 80px;">🎸 Guitar Tuner</button>
+                    <button class="btn btn-outline" id="tuner-kalimba-btn" onclick="renderInstrumentNotes('kalimba')" style="margin-top:0; flex:1; min-width: 80px;">🪕 Kalimba</button>
+                </div>
+                
+                <div style="font-size: 4rem; font-weight: bold; margin-bottom: 0.5rem; color: #ff6b81;" id="tuner-reaction">🦆🪕</div>
+                <h3 id="tuner-status-text" style="color: var(--color-primary-dark); font-size: 1.5rem; margin-bottom: 0.5rem;">Ready to tune! 🎵</h3>
+                
+                <!-- TUNER METER -->
+                <div id="tuner-meter-container" style="display: none; position: relative; width: 100%; max-width: 300px; height: 40px; background: rgba(255,182,193,0.3); border-radius: 20px; margin: 1rem auto 2rem auto; overflow: hidden; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);">
+                    <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: #ff6b81; transform: translateX(-50%); z-index: 2;"></div>
+                    <div id="tuner-needle" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 8px; background: #a32a3d; transform: translateX(-50%); border-radius: 4px; z-index: 3; transition: left 0.1s linear, background-color 0.2s;"></div>
+                </div>
+                
+                <div id="tuner-notes-container" style="display: grid; gap: 0.8rem; margin-bottom: 1.5rem; justify-content: center;">
+                    <!-- buttons injected JS -->
+                </div>
+                
+                <div style="display:flex; flex-direction:column; gap: 1rem; align-items:center;">
+                    <button class="btn btn-primary" id="btn-autoplay" onclick="toggleAutoPlay()" style="width: 100%; max-width: 250px;">▶ Auto Play All</button>
+                    <button class="btn btn-secondary" id="btn-tuner-mic" onclick="toggleMic()" style="width: 100%; max-width: 250px;">🎤 Auto Detect Pitch</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="tuner.js"></script>
+    <script src="koko_data.js"></script>
+    <script src="jokes.js"></script>
+    <script src="moods_data.js"></script>
+    <script src="runner.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
